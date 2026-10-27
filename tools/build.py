@@ -28,7 +28,7 @@ detail_ids={key:versions[0]['id'] for key,versions in record_groups.items()}
 if OUT.exists():
     shutil.rmtree(OUT)
 OUT.mkdir(exist_ok=True)
-for asset in ['style.css','app.js']:
+for asset in ['style.css','app.js','neuvatech-logo.png']:
     shutil.copy(ROOT/'web'/asset,OUT/asset)
 # The search index references shared group definitions by code instead of
 # downloading the same long specification for each priced variant.
@@ -52,7 +52,7 @@ for year,items in search_by_year.items():
 
 def shell(title, body, path='', base='./', description='Resmî kurumların birim fiyat kitaplarında poz numarası veya açıklamayla arama yapın. Poz tanımı, birimi, fiyatı ve kaynak belgesini inceleyin.'):
     canonical=f'<link rel="canonical" href="{e(SITE+"/"+path)}">' if SITE else ''
-    return f'''<!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><base href="{base}"><title>{e(title)} | Poz Arama</title><meta name="description" content="{e(description)}"><meta name="theme-color" content="#166c55">{canonical}<link rel="stylesheet" href="style.css"></head><body><header><nav class="wrap" aria-label="Ana menü"><a class="brand" href="./"><span class="mark">P.</span> Poz Arama</a><div class="links"><a href="./">Poz ara</a><a href="kaynaklar/">Veri kaynakları</a></div></nav></header><main class="wrap">{body}</main><footer><div class="wrap">Poz Arama · Bağımsız arama uygulaması · Resmî kurum sitesi değildir.<br>Fiyatın dönemini ve kapsamını kaynak belgeden kontrol edin. Kapsam ve eksikler: <a href="kaynaklar/">Veri kaynakları</a></div></footer><script src="app.js" defer></script></body></html>'''
+    return f'''<!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><base href="{base}"><title>{e(title)} | Neuvatech Poz</title><meta name="description" content="{e(description)}"><meta name="theme-color" content="#c60000">{canonical}<link rel="stylesheet" href="style.css"></head><body><header><nav class="wrap" aria-label="Ana menü"><a class="brand" href="./" aria-label="Neuvatech Poz ana sayfa"><img src="neuvatech-logo.png" alt="Neuvatech – Engineering Design Technology"></a><div class="links"><a href="./">Poz ara</a><a href="kaynaklar/">Veri kaynakları</a></div></nav></header><main class="wrap">{body}</main><footer><div class="wrap">Neuvatech Poz · Bağımsız arama uygulaması · Resmî kurum sitesi değildir.<br>Fiyatın dönemini ve kapsamını kaynak belgeden kontrol edin. Kapsam ve eksikler: <a href="kaynaklar/">Veri kaynakları</a></div></footer><script src="app.js" defer></script></body></html>'''
 
 def write(path,content):
     dest=OUT/path
