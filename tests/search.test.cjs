@@ -23,6 +23,8 @@ async function main(){
  element('#q').value='ZZZZZ-bulunmayan-poz';submit();
  assert(element('#results').innerHTML.includes('Sonuç bulunamadı'));
  assert(element('#next').disabled);
+ element('#q').value='';element('#institution').value='';element('#year').value='2026';submit();
+ assert(element('#results').innerHTML.includes('· 2026'));
  element('#q').value='25.170.1101';element('#institution').value='ÇŞB';submit();
  assert(element('#results').innerHTML.includes('1.159,35'));
  assert(element('#results').innerHTML.includes('481,88'));

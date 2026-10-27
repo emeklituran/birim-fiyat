@@ -23,8 +23,7 @@ def unit_from(text):
         if token:return token.group(1).strip()
     return None
 
-def run():
-    pages=json.loads((ROOT/'data/csb-tables.json').read_text())
+def parse_pages(pages,year,url,source_id,valid_from):
     records=[];report=[];groups={};seen=set();last=None;mode=None
     for page in pages:
         number=page['page']
@@ -92,12 +91,12 @@ def run():
                     report.append({'page':number,'reason':'unpriced construction row','row':row});continue
                 basis=('Montajlı birim fiyat (TL); montaj bedeli bu tutara ayrıca eklenmez' if installed else ('Rayiç fiyatı (TL)' if code.startswith('10.') else 'Birim fiyat (TL)'))
                 if delivery:basis+=' · Teslim yeri: '+delivery
-                record={'id':'csb-2026-'+code.replace('.','-'),'code':code,'title':title,'unit':unit,
+                record={'id':source_id+'-'+code.replace('.','-'),'code':code,'title':title,'unit':unit,
                     'price':price,'priceText':price_text or ('Grup tarifi; bu kod için ayrı fiyat yayımlanmamış.' if price is None else ''),
                     'delivery':delivery,
-                    'installationPrice':installation,'priceBasis':basis,'institution':'ÇŞB','year':2026,
-                    'period':'2026 yıllık · 01.01.2026','validFrom':'2026-01-01','source':'csb-2026',
-                    'sourceUrl':URL+'#page='+str(number),'page':number,'recordType':record_type,
+                    'installationPrice':installation,'priceBasis':basis,'institution':'ÇŞB','year':year,
+                    'period':f'{year} yıllık · {valid_from[8:10]}.{valid_from[5:7]}.{year}','validFrom':valid_from,'source':source_id,
+                    'sourceUrl':url+'#page='+str(number),'page':number,'recordType':record_type,
                     'discipline':{'10':'İnşaat rayiç','15':'İnşaat','19':'İnşaat','25':'Mekanik','35':'Elektrik'}[code[:2]],
                     'descriptionStatus':('Kitaptaki poz tanımı ve eşleşen üst grup tarifleri aşağıdadır.' if installed else 'Ana kitaptaki tablo tanımı. Ayrı inşaat analiz kitabının ayrıntılı tarif metni henüz aktarılmadı.'),
                     'contexts':contexts.copy() if installed else []}
@@ -114,6 +113,11 @@ def run():
         if '_group' in record:
             record['_group']['title']=record['title']
             del record['_group']
+    return records,report
+
+def run():
+    pages=json.loads((ROOT/'data/csb-tables.json').read_text())
+    records,report=parse_pages(pages,2026,URL,'csb-2026','2026-01-01')
     old=json.loads((ROOT/'data/records.json').read_text())
     old=[r for r in old if r['institution']!='ÇŞB']
     (ROOT/'data/records.json').write_text(json.dumps(old+records,ensure_ascii=False,indent=2))
