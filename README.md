@@ -24,6 +24,8 @@ python -m http.server 8000 --directory dist
 
 Her poz için ayrı HTML sayfası, sayfalanmış bağlantılı dizin, canonical URL, robots.txt ve sitemap.xml üretilir. Google'ın indeksleme kararı garanti edilemez. Alan adı değişirse `SITE_URL` değerini değiştirip yeniden derleyin.
 
+Arayüz yıl filtresini veri dosyalarındaki yıllardan otomatik oluşturur. `data/history-YYYY.json` dosyaları eklendiğinde aynı pozun diğer yıllardaki fiyatları detay sayfasında birbirine bağlanır.
+
 ## GitHub Pages
 
 Dosyaları herkese açık `birim-fiyat` deposunun `main` dalına yükleyin. GitHub **Settings → Pages → Source → GitHub Actions** seçin. `.github/workflows/pages.yml` doğrulama, derleme ve yayınlamayı yapar. İlk yayın için Pages'in depo ayarlarında etkin olması gerekir. Actions kullanımı hesap kotalarına tabidir.
