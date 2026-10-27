@@ -7,7 +7,7 @@ function element(selector){
  if(!elements.has(selector))elements.set(selector,{value:'',innerHTML:'',textContent:'',disabled:false,events:{},addEventListener(name,fn){this.events[name]=fn}});
  return elements.get(selector);
 }
-const context={document:{querySelector:element},URLSearchParams,location:{search:'',pathname:'/'},history:{replaceState(){}},fetch:async()=>({ok:true,json:async()=>real}),setTimeout,clearTimeout};
+const context={document:{querySelector:element},URLSearchParams,location:{search:'',pathname:'/'},history:{replaceState(){}},fetch:async url=>({ok:true,json:async()=>url==='records-manifest.json'?{years:{'2026':'records-2026.json'}}:real}),setTimeout,clearTimeout};
 vm.createContext(context);
 vm.runInContext(readFileSync('web/app.js','utf8'),context);
 const submit=()=>element('#search').events.submit({preventDefault(){}});

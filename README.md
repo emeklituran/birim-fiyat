@@ -4,11 +4,11 @@ Türkçe poz numarası ve anahtar kelime araması; ölçü birimi, fiyat, kaynak
 
 ## Mevcut kapsam
 
-ÇŞB/YFK 2026 ana kitabının kullanıcı tarafından sağlanan 19.01.2026 sürümü, KGM ve DSİ 2026 yıllık kitapları aktarılır. ÇŞB: inşaat rayiçleri ve birim fiyatları, mekanik ve elektrik pozları, ana kitaptaki kodlu grup tarifleri. Montaj bedeli, montajlı fiyatın içindeki ayrı bir bileşendir; fiyata eklenmez. Poz gruplarının açıklamaları yalnızca kod hiyerarşisi eşleştiğinde alt pozlarla ilişkilendirilir.
+ÇŞB/YFK 2019–2026 ana kitapları, 2022'nin üç ve 2023'ün iki ayrı dönemi ile KGM ve DSİ 2026 yıllık kitapları aktarılır. ÇŞB: inşaat rayiçleri ve birim fiyatları, mekanik ve elektrik pozları, ana kitaptaki kodlu grup tarifleri. Montaj bedeli, montajlı fiyatın içindeki ayrı bir bileşendir; fiyata eklenmez. Poz gruplarının açıklamaları yalnızca kod hiyerarşisi eşleştiğinde alt pozlarla ilişkilendirilir.
 
 **ÇŞB'nin ayrı analiz ciltleri, sonraki düzeltmeler ve aylık güncellemeler henüz aktarılmadı.** İnşaat tablo tanımı tam analiz tarifi olarak sunulmaz. DSİ pozlarının bir bölümünde resmî R03 tarif yayınıyla doğrudan poz kodu eşleştirmesi yapılır; ayrı kaynak ve sürüm gösterilir. Diğer kurumlar `data/sources.json` içindedir. Tüm kurumların güncel verilerini kapsadığı iddia edilmez.
 
-Fiyatlar kaynak sütununun niteliğiyle birlikte sunulur; farklı kurumların fiyatları eşdeğer kabul edilmez. Kaynak PDF'ler doğrulama ve yeniden aktarım için `data/` içindedir. Kaynak belgelerin hakları ilgili kurumlara aittir.
+Fiyatlar kaynak sütununun niteliğiyle birlikte sunulur; farklı kurumların fiyatları eşdeğer kabul edilmez. Kaynak PDF'lerin SHA-256 doğrulama özetleri `data/sources.json` içindedir. Büyük tarihsel PDF ve ara tablo dosyaları depoya eklenmez; yeniden aktarım için resmî kaynaklardan edinilir. Kaynak belgelerin hakları ilgili kurumlara aittir.
 
 ## Çalıştırma
 
@@ -24,7 +24,7 @@ python -m http.server 8000 --directory dist
 
 Her poz için ayrı HTML sayfası, sayfalanmış bağlantılı dizin, canonical URL, robots.txt ve sitemap.xml üretilir. Google'ın indeksleme kararı garanti edilemez. Alan adı değişirse `SITE_URL` değerini değiştirip yeniden derleyin.
 
-Arayüz yıl filtresini veri dosyalarındaki yıllardan otomatik oluşturur. `data/history-YYYY.json` dosyaları eklendiğinde aynı pozun diğer yıllardaki fiyatları detay sayfasında birbirine bağlanır.
+Arayüz yıl/dönem filtresini veri dosyalarından otomatik oluşturur. `data/history-YYYY.json` dosyaları aynı pozun diğer yıllardaki fiyatlarını detay sayfasında birbirine bağlar; ara dönemler `history-YYYY-N.json` biçiminde saklanır.
 
 ## GitHub Pages
 
@@ -38,6 +38,7 @@ python tools/import_data.py
 python tools/import_tariffs.py
 python tools/extract_csb.py
 python tools/import_csb.py
+python tools/import_csb_history.py
 python -m unittest discover -s tests
 python tools/build.py
 ```

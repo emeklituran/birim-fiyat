@@ -1,3 +1,6 @@
 dist/
 __pycache__/
 .venv/
+/data/csb-20*.pdf
+/data/csb-20*-tables.json
+/data/csb-20*.partial.json

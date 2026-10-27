@@ -6,6 +6,7 @@ is inherited only from unpriced group codes with a matching numeric prefix.
 import hashlib
 import json
 import re
+from decimal import Decimal
 from pathlib import Path
 from import_data import clean,money
 
@@ -23,8 +24,18 @@ def unit_from(text):
         if token:return token.group(1).strip()
     return None
 
-def parse_pages(pages,year,url,source_id,valid_from):
-    records=[];report=[];groups={};seen=set();last=None;mode=None
+def parse_pages(pages,year,url,source_id,valid_from,period=None):
+    records=[];report=[];groups={};seen={};last=None;mode=None
+    has_legacy_code_column=int(valid_from[:4])<=2020
+    def amount(value):
+        parsed=money(value)
+        if parsed is not None or int(valid_from[:4])>2019:return parsed
+        # The 2019 mechanical tables print some amounts with zero or one
+        # decimal place. Preserve that printed numeric value exactly.
+        raw=clean(value).replace(' ','')
+        if re.fullmatch(r'\d[\d.]*(?:,\d{1,2})?',raw):
+            return str(Decimal(raw.replace('.','').replace(',','.')))
+        return None
     for page in pages:
         number=page['page']
         for table in page['tables']:
@@ -32,38 +43,54 @@ def parse_pages(pages,year,url,source_id,valid_from):
                 row=[clean(x) for x in cells]
                 if not row:continue
                 header=' '.join(row)
-                if 'Poz No' in header and ('Tanımı' in header or 'Yapılacak İşin Cinsi' in header):
-                    mode='installed' if 'Montaj' in header else 'standard'
+                header_fold=header.casefold()
+                if 'poz no' in header_fold and ('tan' in header_fold or 'yap' in header_fold):
+                    mode='installed' if 'montaj' in header_fold else 'standard'
                     continue
                 codes=CODE.findall(row[0])
+                if not re.match(r'^\D{0,2}(?:10|15|19|25|35)\.\d{3}\.\d{4}',row[0]):
+                    codes=[]
                 if not codes:
                     # Continuation of a group tariff over a PDF page boundary.
-                    if len(row)>=2 and row[1] and not any(money(x) for x in row[2:]) and last and last['recordType']=='group' and row[0] in ('','o','N','No'):
+                    if len(row)>=2 and row[1] and not any(amount(x) for x in row[2:]) and last and last['recordType']=='group' and row[0] in ('','o','N','No'):
                         last['title']+=' '+row[1]
                         last['endPage']=number
                         if '_group' in last:last['_group']['title']=last['title']
                     continue
+                # Older books include a legacy poz number between the current
+                # code and title (and sometimes leave that column blank).
+                # Remove only code-like cells so the remaining columns match
+                # the newer book layout.
+                if has_legacy_code_column and len(row)>=4 and row[2] and (not row[1] or re.fullmatch(r'-+',row[1]) or (len(row[1])<30 and not re.search(r'\s',row[1]) and re.search(r'\d',row[1]))):
+                    row=[row[0]]+row[2:]
                 if len(codes)!=1 or len(row) not in (3,4,5) or not row[1]:
                     report.append({'page':number,'reason':'ambiguous table cells','row':row});continue
                 code=codes[0];title=row[1]
                 if code in seen:
+                    if seen[code]==row:continue
                     report.append({'page':number,'reason':'duplicate code','row':row});continue
                 installed=mode=='installed' and code.startswith(('25.','35.'))
                 price_text='';delivery=''
                 if installed:
                     if len(row)!=4:
                         report.append({'page':number,'reason':'unexpected installed columns','row':row});continue
-                    price=money(row[2]);installation=money(row[3]);unit=None
+                    price=amount(row[2]);installation=amount(row[3]);unit=None
                     price_raw=row[2]
-                    if price_raw in (':','li','k','n','ı') and not row[3]:
-                        if price_raw!=':':title+=price_raw
+                    if (price_raw in (':',')',',') or re.fullmatch(r'[a-zA-ZçÇğĞıİöÖşŞüÜ]{1,2}',price_raw)) and not row[3]:
+                        if re.fullmatch(r'[a-zA-ZçÇğĞıİöÖşŞüÜ]{1,2}',price_raw):title+=price_raw
                         price_raw=''
+                    elif re.fullmatch(r'[\d.]+,\d{2}\s*,',price_raw):
+                        price=amount(price_raw.rstrip(' ,'))
+                    elif re.fullmatch(r'[a-zA-Zıİ]\s+[\d.]+,\d{2}',price_raw):
+                        # A stray glyph can be carried into the amount cell by
+                        # the PDF text layer; keep the printed numeric amount.
+                        price=amount(price_raw.split(maxsplit=1)[1])
                     elif re.fullmatch(r'%\s*\d+(?:,\d+)?',price_raw):
                         price_text=price_raw
                     elif price is None and re.fullmatch(r'\d[\d.]*,\d{2}\s+[a-zA-Zıİ]+',price_raw):
-                        price=money(price_raw.split()[0])
+                        price=amount(price_raw.split()[0])
                 else:
-                    price=money(row[-1]);installation=None;price_raw=row[-1]
+                    price=amount(row[-1]);installation=None;price_raw=row[-1]
                     unit=row[2] if len(row)>=4 else None
                     if len(row)==5:delivery=row[3]
                     if not price_raw and re.search(r'\bF\s*=',title):price_text='Formüle göre hesaplanır; poz tanımındaki formüle bakınız.'
@@ -95,7 +122,7 @@ def parse_pages(pages,year,url,source_id,valid_from):
                     'price':price,'priceText':price_text or ('Grup tarifi; bu kod için ayrı fiyat yayımlanmamış.' if price is None else ''),
                     'delivery':delivery,
                     'installationPrice':installation,'priceBasis':basis,'institution':'ÇŞB','year':year,
-                    'period':f'{year} yıllık · {valid_from[8:10]}.{valid_from[5:7]}.{year}','validFrom':valid_from,'source':source_id,
+                    'period':period or f'{year} yıllık · {valid_from[8:10]}.{valid_from[5:7]}.{valid_from[:4]}','validFrom':valid_from,'source':source_id,
                     'sourceUrl':url+'#page='+str(number),'page':number,'recordType':record_type,
                     'discipline':{'10':'İnşaat rayiç','15':'İnşaat','19':'İnşaat','25':'Mekanik','35':'Elektrik'}[code[:2]],
                     'descriptionStatus':('Kitaptaki poz tanımı ve eşleşen üst grup tarifleri aşağıdadır.' if installed else 'Ana kitaptaki tablo tanımı. Ayrı inşaat analiz kitabının ayrıntılı tarif metni henüz aktarılmadı.'),
@@ -106,7 +133,7 @@ def parse_pages(pages,year,url,source_id,valid_from):
                     group={'code':code,'title':title,'page':number,'url':record['sourceUrl']}
                     groups[code]=group
                     record['_group']=group
-                records.append(record);seen.add(code);last=record
+                records.append(record);seen[code]=row;last=record
                 if record_type=='group':last=record
                 # Continuation edits must update both the record and group.
     for record in records:

@@ -46,4 +46,17 @@ class DataTests(unittest.TestCase):
             self.assertTrue(r['code'].startswith(('10.','15.','19.','25.','35.')))
             if r['recordType']=='group':self.assertIsNone(r['price'])
 
+    def test_csb_history_periods(self):
+        expected={
+            '2019':'14.38','2020':'16.88','2021':'20.56',
+            '2022-1':'31.25','2022-2':'31.25','2022-3':'40.63',
+            '2023-1':'62.50','2023-2':'93.75','2024':'155.00','2025':'206.25',
+        }
+        for period,price in expected.items():
+            records=json.loads((ROOT/f'data/history-{period}.json').read_text())
+            self.assertGreater(len(records),16000)
+            self.assertEqual(len({r['id'] for r in records}),len(records))
+            record=next(r for r in records if r['code']=='15.100.1001')
+            self.assertEqual(Decimal(record['price']),Decimal(price))
+
 if __name__=='__main__':unittest.main()
