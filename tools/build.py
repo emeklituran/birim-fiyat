@@ -15,7 +15,16 @@ if OUT.exists():
 OUT.mkdir(exist_ok=True)
 for asset in ['style.css','app.js']:
     shutil.copy(ROOT/'web'/asset,OUT/asset)
-shutil.copy(ROOT/'data/records.json',OUT/'records.json')
+# The search index references shared group definitions by code instead of
+# downloading the same long specification for each priced variant.
+search_records=[]
+search_fields={'id','code','title','unit','price','priceText','priceBasis','institution','year','period','recordType','installationPrice','tariff'}
+for record in records:
+    item={key:value for key,value in record.items() if key in search_fields}
+    if item.get('tariff'):item['tariff']={'text':item['tariff']['text']}
+    item['contextCodes']=[c['code'] for c in record.get('contexts',[])]
+    search_records.append(item)
+(OUT/'records.json').write_text(json.dumps(search_records,ensure_ascii=False,separators=(',',':')))
 
 def shell(title, body, path='', base='./', description='Resmî kurumların birim fiyat kitaplarında poz numarası veya açıklamayla arama yapın. Poz tanımı, birimi, fiyatı ve kaynak belgesini inceleyin.'):
     canonical=f'<link rel="canonical" href="{e(SITE+"/"+path)}">' if SITE else ''
@@ -28,14 +37,23 @@ def write(path,content):
 
 institutions=sorted(set(r['institution'] for r in records))
 options=''.join(f'<option value="{e(x)}">{e(x)}</option>' for x in institutions)
-body=f'''<section class="hero"><div class="eyebrow">Kamu birim fiyat kütüphanesi · 2026</div><h1>Aradığınız poz,<br>tek bir yerde.</h1><p>Poz numarasını veya işin adını yazın. Birim fiyatı, kitapta yer alan tanımı ve resmî kaynağı birlikte bulun.</p></section><form id="search" role="search"><div class="searchbox"><label class="sr-only" for="q">Poz numarası veya anahtar kelimeler</label><input id="q" name="q" type="search" placeholder="Poz numarası veya anahtar kelime…" autocomplete="off"><button class="primary" type="submit">Ara →</button></div><div class="filters"><label for="institution">Kurum</label><select id="institution"><option value="">Tüm aktarılan kurumlar</option>{options}</select><span class="muted">Türkçe karakter olmadan da arayabilirsiniz.</span></div></form><aside class="notice">İlk veri aktarımı: KGM ve DSİ 2026 yıllık fiyatları. ÇŞB ve diğer kurumların aktarımı sürüyor. DSİ pozlarının bir bölümünde ayrı R03 yayınından tarif metni de bulunur; diğer ayrıntılı analiz ve tarifler henüz aktarılmadı. Yıllık fiyatlar, aylık güncellemelerden farklıdır. <a href="kaynaklar/">Kapsamı incele →</a></aside><div class="bar"><strong id="count" role="status" aria-live="polite">Pozlar yükleniyor…</strong><span class="muted">Fiyatlar Türk lirası</span></div><section id="results" class="results" aria-label="Arama sonuçları"></section><div class="paging"><button id="prev" disabled>← Önceki</button><span id="page">1 / 1</span><button id="next" disabled>Sonraki →</button></div><noscript><p>Canlı arama için JavaScript gereklidir. <a href="dizin/">Poz dizinini</a> JavaScript olmadan inceleyebilirsiniz.</p></noscript><a class="muted" href="dizin/">Tüm pozlar dizini →</a>'''
+body=f'''<section class="hero"><div class="eyebrow">Kamu birim fiyat kütüphanesi · 2026</div><h1>Aradığınız poz,<br>tek bir yerde.</h1><p>Poz numarasını veya işin adını yazın. Birim fiyatı, kitapta yer alan tanımı ve resmî kaynağı birlikte bulun.</p></section><form id="search" role="search"><div class="searchbox"><label class="sr-only" for="q">Poz numarası veya anahtar kelimeler</label><input id="q" name="q" type="search" placeholder="Poz numarası veya anahtar kelime…" autocomplete="off"><button class="primary" type="submit">Ara →</button></div><div class="filters"><label for="institution">Kurum</label><select id="institution"><option value="">Tüm aktarılan kurumlar</option>{options}</select><span class="muted">Türkçe karakter olmadan da arayabilirsiniz.</span></div></form><aside class="notice">ÇŞB, KGM ve DSİ 2026 yıllık yayınları. ÇŞB ana kitabındaki mekanik ve elektrik tarifleri, montajlı fiyatlar ve ayrı montaj bedelleri dahil. Ayrı ÇŞB analiz ciltleri ve aylık güncellemeler henüz aktarılmadı. DSİ pozlarının bir bölümünde R03 tarif metni bulunur. Yıllık fiyatlar, aylık güncellemelerden farklıdır. <a href="kaynaklar/">Kapsamı incele →</a></aside><div class="bar"><strong id="count" role="status" aria-live="polite">Pozlar yükleniyor…</strong><span class="muted">Fiyatlar Türk lirası</span></div><section id="results" class="results" aria-label="Arama sonuçları"></section><div class="paging"><button id="prev" disabled>← Önceki</button><span id="page">1 / 1</span><button id="next" disabled>Sonraki →</button></div><noscript><p>Canlı arama için JavaScript gereklidir. <a href="dizin/">Poz dizinini</a> JavaScript olmadan inceleyebilirsiniz.</p></noscript><a class="muted" href="dizin/">Tüm pozlar dizini →</a>'''
 write('index.html',shell('2026 birim fiyat ve poz arama',body))
 paths=['','kaynaklar/','dizin/']
 for r in records:
     path='poz/'+r['id']+'/'
     paths.append(path)
-    price=(f"{float(r['price']):,.2f}".translate(str.maketrans(',.','.,'))+" ₺") if r['price'] is not None else "Tarife bağlı"
+    price=(f"{float(r['price']):,.2f}".translate(str.maketrans(',.','.,'))+" ₺") if r['price'] is not None else ('Grup tarifi' if r.get('recordType')=='group' else "Tarife bağlı")
     body=f'''<article class="detail"><a class="muted" href="./">← Poz aramaya dön</a><p class="eyebrow">{e(r['institution'])} · {r['year']} · {e(r['code'])}</p><h1>{e(r['title'])}</h1><section class="detail-panel"><dl class="facts"><div><dt>Poz numarası</dt><dd>{e(r['code'])}</dd></div><div><dt>Birim</dt><dd>{e(r['unit'])}</dd></div><div><dt>Fiyat</dt><dd>{price}</dd></div><div><dt>Dönem</dt><dd>{e(r['period'])}</dd></div></dl><p class="muted">{e(r['priceBasis'])}</p><p>{e(r.get('priceText',''))}</p></section><section class="prose"><h2>Kitaptaki tanım</h2><p>{e(r['title'])}</p><aside class="notice">{e(r['descriptionStatus'])}</aside><h2>Resmî kaynak</h2><p><a href="{e(r['sourceUrl'])}" target="_blank" rel="noopener noreferrer">{e(r['institution'])} {r['year']} birim fiyat kitabı · PDF sayfa {r['page']} ↗</a></p><p>Gösterilen fiyat kitabın ilgili sütunundan alınmıştır. KDV, kâr ve diğer uygulama koşulları için resmî belgenin genel hükümlerini inceleyin.</p></section></article>'''
+    if r.get('installationPrice') is not None:
+        installation=f"{float(r['installationPrice']):,.2f}".translate(str.maketrans(',.','.,'))
+        body=body.replace('</dl>',f'<div><dt>Montaj bedeli (fiyatın içindedir)</dt><dd>{installation} ₺</dd></div></dl>',1)
+    if r.get('contexts'):
+        context_section='<section class="prose"><h2>Üst grup tarifleri</h2>'
+        for context in r['contexts']:
+            context_section+='<h3>'+e(context['code'])+'</h3><p>'+e(context['title'])+'</p><a href="'+e(context['url'])+'" target="_blank" rel="noopener noreferrer">Kaynak PDF · sayfa '+str(context['page'])+' ↗</a>'
+        context_section+='</section>'
+        body=body.replace('</article>',context_section+'</article>')
     if r.get('tariff'):
         t=r['tariff']
         section='<section class="prose"><h2>Kaynak tarif metni</h2><p class="muted">'+e(t['version'])+'</p><div style="white-space:pre-wrap">'+e(t['text'])+'</div><p><a href="'+e(t['url'])+'" target="_blank" rel="noopener noreferrer">Tarif PDF · sayfa '+str(t['page'])+' ↗</a></p></section>'

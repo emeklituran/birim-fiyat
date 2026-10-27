@@ -24,4 +24,26 @@ class DataTests(unittest.TestCase):
             record=next(r for r in records if r['institution']==institution and r['code']==code)
             self.assertEqual(Decimal(record['price']),Decimal(expected))
 
+    def test_csb_price_columns_and_context(self):
+        records=json.loads((ROOT/'data/records.json').read_text())
+        csb={r['code']:r for r in records if r['institution']=='ÇŞB'}
+        self.assertGreater(len(csb),5000)
+        self.assertEqual(Decimal(csb['15.100.1001']['price']),Decimal('256.25'))
+        self.assertEqual(Decimal(csb['10.100.1062']['price']),Decimal('205.00'))
+        mechanical=csb['25.170.1101']
+        self.assertEqual(Decimal(mechanical['price']),Decimal('1159.35'))
+        self.assertEqual(Decimal(mechanical['installationPrice']),Decimal('481.88'))
+        self.assertEqual(mechanical['unit'],'m')
+        self.assertTrue(any('KOLLEKTÖR' in c['title'] for c in mechanical['contexts']))
+        electrical=csb['35.172.1226']
+        self.assertEqual(Decimal(electrical['price']),Decimal('9099.21'))
+        self.assertEqual(Decimal(electrical['installationPrice']),Decimal('474.21'))
+        self.assertEqual(csb['25.615.1200']['unit'],'Adet')
+        self.assertIsNone(csb['25.300.2100']['price'])
+        self.assertEqual(csb['25.300.2100']['priceText'],'% 30')
+        self.assertIn('Depoda',csb['10.130.1001']['priceBasis'])
+        for r in csb.values():
+            self.assertTrue(r['code'].startswith(('10.','15.','19.','25.','35.')))
+            if r['recordType']=='group':self.assertIsNone(r['price'])
+
 if __name__=='__main__':unittest.main()

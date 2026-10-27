@@ -4,7 +4,9 @@ Türkçe poz numarası ve anahtar kelime araması; ölçü birimi, fiyat, kaynak
 
 ## Mevcut kapsam
 
-KGM ve DSİ 2026 yıllık kitaplarının ayrıştırılabilen fiyat tabloları. **ÇŞB aktarımı, aylık güncellemeler ve ayrıntılı analiz/tarif kapsamı henüz tamamlanmadı. DSİ pozlarının bir bölümünde resmî R03 tarif yayınıyla doğrudan poz kodu eşleştirmesi yapılır; ayrı kaynak ve sürüm gösterilir.** Tablo tanımı tam tarif olarak sunulmaz. Diğer kurumlar için kaynak listesi `data/sources.json` içindedir. Tüm kurumların güncel verilerini kapsadığı iddia edilmez.
+ÇŞB/YFK 2026 ana kitabının kullanıcı tarafından sağlanan 19.01.2026 sürümü, KGM ve DSİ 2026 yıllık kitapları aktarılır. ÇŞB: inşaat rayiçleri ve birim fiyatları, mekanik ve elektrik pozları, ana kitaptaki kodlu grup tarifleri. Montaj bedeli, montajlı fiyatın içindeki ayrı bir bileşendir; fiyata eklenmez. Poz gruplarının açıklamaları yalnızca kod hiyerarşisi eşleştiğinde alt pozlarla ilişkilendirilir.
+
+**ÇŞB'nin ayrı analiz ciltleri, sonraki düzeltmeler ve aylık güncellemeler henüz aktarılmadı.** İnşaat tablo tanımı tam analiz tarifi olarak sunulmaz. DSİ pozlarının bir bölümünde resmî R03 tarif yayınıyla doğrudan poz kodu eşleştirmesi yapılır; ayrı kaynak ve sürüm gösterilir. Diğer kurumlar `data/sources.json` içindedir. Tüm kurumların güncel verilerini kapsadığı iddia edilmez.
 
 Fiyatlar kaynak sütununun niteliğiyle birlikte sunulur; farklı kurumların fiyatları eşdeğer kabul edilmez. Kaynak PDF'ler doğrulama ve yeniden aktarım için `data/` içindedir. Kaynak belgelerin hakları ilgili kurumlara aittir.
 
@@ -32,6 +34,8 @@ Dosyaları herkese açık `birim-fiyat` deposunun `main` dalına yükleyin. GitH
 python -m pip install -r requirements.txt
 python tools/import_data.py
 python tools/import_tariffs.py
+python tools/extract_csb.py
+python tools/import_csb.py
 python -m unittest discover -s tests
 python tools/build.py
 ```
@@ -39,3 +43,5 @@ python tools/build.py
 İçe aktarma çevrimdışı kayıtlı resmî PDF dosyalarını okur; kendiliğinden güncel yayın indirmez. Yeni dönem için resmî dosyayı edinip kaynak manifestine ayrı dönem olarak ekleyin. `data/import-report.json` ayrıştırılamayan veya yinelenen satırları içerir; rapor gözden geçirilmeden tam kapsam varsayılmamalıdır. Kaynak SHA-256 özetleri manifestte tutulur.
 
 Tarif aktarımı için sistemde `pdftotext` (Ubuntu: `poppler-utils`) bulunmalıdır. Gruplu pozlar ve sonraki sayfaya taşan tarifler otomatik eşleştirilmez; tam kapsam değildir.
+
+ÇŞB tablosunun özgün hücreleri `data/csb-tables.json`, kaynak PDF özeti `data/sources.json`, inceleme gerektiren satırlar `data/csb-import-report.json` içinde tutulur. Çıkarım 741 sayfanın tablo geometrisini okuduğu için birkaç dakika sürebilir; günlük site derlemesi hazır JSON verisini kullanır ve PDF çıkarımını tekrarlamaz.

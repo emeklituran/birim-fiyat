@@ -21,10 +21,13 @@ def money(value):
     return str(Decimal(value.replace('.', '').replace(',', '.')))
 
 def run():
-    records, report, seen = [], [], set()
+    existing_path=ROOT/'data/records.json'
+    existing=json.loads(existing_path.read_text()) if existing_path.exists() else []
+    records=[r for r in existing if r['institution']=='ÇŞB']
+    report, seen = [], set()
     sources = json.loads((ROOT / 'data/sources.json').read_text())
     for source in sources:
-        if source['status'] != 'imported':
+        if source['status'] != 'imported' or source['institution']=='ÇŞB':
             continue
         file = ROOT / 'data' / source['file']
         source['sha256'] = hashlib.sha256(file.read_bytes()).hexdigest()

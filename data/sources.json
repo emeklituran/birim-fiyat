@@ -26,10 +26,13 @@
     "id": "csb-2026",
     "institution": "ÇŞB",
     "year": 2026,
-    "period": "2026",
-    "url": "https://yfk.csb.gov.tr/birim-fiyatlar-100468",
-    "status": "pending",
-    "note": "Resmî kitap ve analiz listesi bulundu. Dosya sunucusuna erişilemedi; veri aktarımı bekliyor."
+    "period": "2026 yıllık · 01.01.2026",
+    "url": "https://webdosya.csb.gov.tr/v2/yfk/2026/01/1-BF-202619011535-20260119155143.pdf",
+    "status": "imported",
+    "note": "Kullanıcının sağladığı 19.01.2026 sürümü: inşaat rayiç ve fiyatları, mekanik ve elektrik fiyatları ile ana kitaptaki poz ve üst grup tarifleri. Montaj bedeli ayrı gösterilir; montajlı fiyata eklenmez. Ayrı analiz ciltleri ve sonraki düzeltmeler henüz aktarılmadı.",
+    "file": "csb-2026.pdf",
+    "validFrom": "2026-01-01",
+    "sha256": "d8495a6b117111a4d2c9ed975527512c1dccd8371c2bb40c6d21700af0aeb307"
   },
   {
     "id": "csb-monthly",
