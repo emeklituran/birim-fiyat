@@ -1,0 +1,19 @@
+name: Fetch official CSB publications
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download official publication index and seed PDFs
+        run: python tools/fetch_csb.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: csb-publications
+          path: csb-downloads
+          retention-days: 3
