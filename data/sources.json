@@ -1,0 +1,52 @@
+[
+  {
+    "id": "kgm-2026",
+    "institution": "KGM",
+    "year": 2026,
+    "period": "2026 yıllık",
+    "validFrom": "2026-01-01",
+    "file": "kgm-2026.pdf",
+    "url": "https://www.kgm.gov.tr/SiteCollectionDocuments/KGMdocuments/MerkezBirimler/ProgramIzlemeDairesiBaskanligi/2026YiliBirimFiyatListesi.pdf",
+    "status": "imported",
+    "note": "Fiyat sütunlarındaki kârsız/kârlı ayrımı kayıtta ayrıca belirtilir.",
+    "sha256": "256b180d669aaa4239154a7f1fcdc5496eb17c90a687c9849070b0abae4963c2"
+  },
+  {
+    "id": "dsi-2026",
+    "institution": "DSİ",
+    "year": 2026,
+    "period": "2026 yıllık",
+    "file": "dsi-2026.pdf",
+    "url": "https://cdniys.tarimorman.gov.tr/api/File/GetFile/425/Sayfa/738/1086/DosyaGaleri/dsi_2026_yili_birim_fiyat_kitabi.pdf",
+    "status": "imported",
+    "note": "2026 yıllık fiyat tablosu aktarıldı. Pozların bir bölümüne ayrı R03 yayınının tarif metni eşleştirildi; her eşleşmenin kaynak sayfası kayıtta belirtilir.",
+    "sha256": "cdee74afaa12adca65ec027ceabab25b104174c236e4d8d18e90c2c646c75049"
+  },
+  {
+    "id": "csb-2026",
+    "institution": "ÇŞB",
+    "year": 2026,
+    "period": "2026",
+    "url": "https://yfk.csb.gov.tr/birim-fiyatlar-100468",
+    "status": "pending",
+    "note": "Resmî kitap ve analiz listesi bulundu. Dosya sunucusuna erişilemedi; veri aktarımı bekliyor."
+  },
+  {
+    "id": "csb-monthly",
+    "institution": "ÇŞB",
+    "year": 2026,
+    "period": "Aylık güncellemeler",
+    "url": "https://yfk.csb.gov.tr/aylik-guncel-rayic-ve-birim-fiyat-listeleri-113351",
+    "status": "pending",
+    "note": "Aylık güncel fiyatlar henüz aktarılmadı. Yıllık fiyatlar aylık güncel fiyat olarak sunulmaz."
+  },
+  {
+    "id": "ktb-2026",
+    "institution": "KTB / VGM",
+    "year": 2026,
+    "period": "2026",
+    "url": "https://engelsiz.ktb.gov.tr/TR-447694/2026-yili-birim-fiyat-listeleri-birim-fiyat-analiz-ve-tarifleri-kitabi.html",
+    "status": "pending",
+    "note": "Resmî kaynak bulundu; aktarım bekliyor."
+  }
+]

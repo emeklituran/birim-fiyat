@@ -1,0 +1,252 @@
+[
+  {
+    "source": "kgm-2026",
+    "page": 9,
+    "row": [
+      "07.004/K 07.005/K",
+      "Yarma kazılarının taşınması m3 F = 1,25 x K x [( 0,00046 x M ) - 0,0046 ] Bu formüllerdeki; K = 2365,00 olup, Rayiç cetvelinde yazılı olan (Poz No: 02.017) \"Her cins ve tonajda motorlu araca ait\" taşıma katsayısıdır. M = Brükner eğrisi üzerinden hesabedilen m. cinsinden ortalama taşıma mesafelerinin karaköklerinin ağırlıklı ortalamasıdır. Kazıdan başka inşaat malzemelerinin taşınması (10 000 m. ye kadar) (1) m3 cinsinden ölçülen (su hariç) malzemelerin beher m3' ü için; m3 F = 1,25 x 0,00017 x K x M x Y x A (2) ton cinsinden ölçülen (su dahil) malzemelerin beher ton' u için; ton F = 1,25 x 0,00017 x K x M x A Bu formüllerdeki; K = Poz 07.004/K daki gibidir. M = Taşıma yolu üzerinden ölçülen mesafeler esas alınarak hesaplanan m. cinsinden yatay ortalama taşıma mesafelerinin kareköklerinin ağırlıklı ortalamasıdır. Y = Malzemenin figüre (istif) edilmiş haline ait ortalama kabul edilmiş yoğunluğu (Birim Hacim Ağırlığı) olup, bu yoğunluk malzeme cinslerine göre aşağıdaki tabloda tespit edildiği gibi aynen uygulanacaktır. Ayrıca iş sırasında yoğunluk tespiti yapılmayacaktır.",
+      "",
+      ""
+    ]
+  },
+  {
+    "source": "kgm-2026",
+    "page": 11,
+    "row": [
+      "07.005/K-1 07.005/K-2 07.006/K",
+      "Ariyet ocağından getirilecek veya depoya m3 F = 1,25 x K x [( 0,00034 x M ) - 0,0034 ] gidecek kazının taşınması (10 000 m. ye kadar) K = Poz 07.004/K daki gibidir. M = Poz 07.005/K daki gibidir. Ariyet ocağından getirilecek veya depoya m3 F = 1,25 x K x [( 0,0014 x M + 0,02 ) - 0,0034 ] gidecek kazının taşınması (10 000 m. den fazla) Bu formüllerdeki; K = Poz 07.004/K daki gibidir. M = Taşıma yolu üzerinden ölçülen mesafeler esas alınarak hesaplanan km. cinsinden yatay ortalama taşıma mesafelerinin ağırlıklı ortalamasıdır. Kazıdan başka inşaat malzemelerinin taşınması (10 000 m. den fazla) (1) m3 cinsinden ölçülen (su hariç) malzemelerin beher m3' ü için; m3 F = 1,25 x K x ( 0,0007 x M + 0,01 ) x Y x A (2) ton cinsinden ölçülen (su dahil) malzemelerin beher ton' u için; ton F = 1,25 x K x ( 0,0007 x M + 0,01 ) x A Bu formüllerdeki; K = Poz 07.004/K daki gibidir. Y = Poz 07.005/K daki gibidir. M = Poz 07.005/K-2 deki gibidir.",
+      "",
+      ""
+    ]
+  },
+  {
+    "source": "kgm-2026",
+    "page": 12,
+    "row": [
+      "09.001/K 09.012/K 2200 2202",
+      "Çimentonun yüklenmesi, taşınması Bu birim fiyat; analizine göre hesabedilir, \"Kar ve Genel Masraf\" nispetleri dikkate ton boşaltılması ve istifi alınır. İnşaat bünyesine giren her cins betonarme, profil, lama demirleriyle düz sacın; Bu birim fiyat; analizine göre hesabedilir, \"Kar ve Genel Masraf\" nispetleri dikkate ton yüklenmesi taşınması, boşaltılması ve istifi alınır. Her cins ve klastaki zeminde yarma kazısı m3 yapılması ve kullanılması Bufiyat;hercinsveklastakizemindeyarmakazılarındanherbirinin1.keşfegirenhacimlerininkazıvekullanılmalarındatatbikedilenbirim fiyatlarileçarpımlarıtoplamınınhacimleritoplamınabölünmesisuretiyleayrıayrıbulunur.1.keşiflerinhazırlanmasında;ihaleedilecekbiryolu önemliceklasfarkıarzedenbirçokkesimeayırmakmümküniseherbirkesimiçinayrıayrı2200numaralıbirimfiyathesaplanabilirvekeşfe her kesim için ayrı birim fiyat konabilir. Her cins ve klastaki zeminde ocak ariyeti m3 kazısı yapılması ve kullanılması Bufiyat;hercinsveklastakizemindeocakariyetikazısının1.keşfegirenhacimlerininkazıvekullanılmalarındatatbikedilenbirimfiyatlarile çarpımları toplamının hacimleri toplamına bölünmesi suretiyle bulunur. 1. keşiflerin hazırlanmasında; kullanılacak ariyet ocakları önemlice klas farkı arzediyorsa farklılık arzeden ocaklar için ayrı ayrı 2202 numaralı birim fiyat hesaplanabilir ve keşfe bu ayrı birim fiyatlar konabilir.",
+      "",
+      ""
+    ]
+  },
+  {
+    "source": "dsi-2026",
+    "page": 7,
+    "row": [
+      "50.205.1401",
+      "DSİ PE100 GTŞ’ye uygun PN16, DN110, PE100 boru bedeli",
+      "metre",
+      "235238,,0000"
+    ]
+  },
+  {
+    "source": "dsi-2026",
+    "page": 7,
+    "row": [
+      "50.205.1402 50.205.1404",
+      "DSİ PE100 GTŞ’ye uygun PN16, DN125, PE100 boru bedeli DSİ PE100 GTŞ’ye uygun PN16, DN160, PE100 boru bedeli",
+      "metre metre",
+      "536,00"
+    ]
+  },
+  {
+    "source": "dsi-2026",
+    "page": 16,
+    "row": [
+      "52.180.1039",
+      "Pompa terfi hatlarında her çap ve et kalınlığında spiral kaynaklı çelik boru imali ve ihzarı",
+      "kg",
+      ""
+    ]
+  },
+  {
+    "source": "dsi-2026",
+    "page": 18,
+    "row": [
+      "55.108.1019",
+      "İş başında mazot (motorin) hazırlanması (Fatura fiyatı aynen alınır)",
+      "litre",
+      "Faturadan"
+    ]
+  },
+  {
+    "source": "dsi-2026",
+    "page": 19,
+    "row": [
+      "55.108.1020",
+      "1 - Gom II AL dinamit",
+      "kg",
+      "---"
+    ]
+  },
+  {
+    "source": "dsi-2026",
+    "page": 30,
+    "row": [
+      "55.230.1027",
+      "Dipsavak vanaları veya kapakları ve kumanda mekanizmaları",
+      "",
+      "Faturadan"
+    ]
+  },
+  {
+    "source": "dsi-2026",
+    "page": 30,
+    "row": [
+      "55.230.1031",
+      "Santral su boşaltma sisteminin temini ve yerine monte edilmesi",
+      "",
+      "Faturadan"
+    ]
+  },
+  {
+    "source": "dsi-2026",
+    "page": 30,
+    "row": [
+      "55.230.1033",
+      "Santral gezer vincinin imali ve yerine konulması",
+      "",
+      "Faturadan"
+    ]
+  },
+  {
+    "source": "dsi-2026",
+    "page": 31,
+    "row": [
+      "55.350.1301",
+      "Baraj ölçüm teçhizatı ve teferruatı",
+      "",
+      "Faturadan"
+    ]
+  },
+  {
+    "source": "dsi-2026",
+    "page": 31,
+    "row": [
+      "55.350.1501",
+      "Santral ve kontrol binaları sıhhı tesisat malzemelerinin temin edilmesi",
+      "",
+      "Faturadan"
+    ]
+  },
+  {
+    "source": "dsi-2026",
+    "page": 31,
+    "row": [
+      "55.350.1503",
+      "Santral ve kontrol binası ısıtma havalandırma ve klima tesisatı yapılması",
+      "",
+      "Faturadan"
+    ]
+  },
+  {
+    "source": "dsi-2026",
+    "page": 31,
+    "row": [
+      "55.350.1504",
+      "Baraj ve HES tesisleri aydınlatma tesisatı malzemelerinin temin edilmesi",
+      "",
+      "Faturadan"
+    ]
+  },
+  {
+    "source": "dsi-2026",
+    "page": 31,
+    "row": [
+      "55.350.1506",
+      "Telefon ve saat tesisatı yapılması",
+      "",
+      "Faturadan"
+    ]
+  },
+  {
+    "source": "dsi-2026",
+    "page": 39,
+    "row": [
+      "51.550.1015",
+      "Taşıma Mesafesi, Taşıma Yolu Üzerinden Ölçülen Her Cins Kaplamalı Kaplamasız Yolda “M” Metre Mesafeye (10 000 metre ve daha az) Her Cins Yük ve Malzemenin Taşınması (Ton) (1 Ton Her Cins Malzemenin M= ……….m. Mesafeye taşınması F= 0.00017 K. A.B.M √M 1 Ton yükün M metreye taşıma fiyatı k",
+      "Ton",
+      ""
+    ]
+  },
+  {
+    "source": "dsi-2026",
+    "page": 39,
+    "row": [
+      "51.550.1020",
+      "Taşıma Mesafesi, Taşıma Yolu Üzerinden Ölçülen Her Cins Kaplamalı Kaplamasız Yolda “M” Metre Mesafeye (10 km den fazla) Her Cins Yük ve Malzemenin Taşınması (Ton) (1 Ton Her Cins Malzemenin M= ……….km. Mesafeye taşınması F=K(0.0007 x M+0.01).A.B.M 1 Ton yükün M km'ye taşıma fiyatı k",
+      "Ton",
+      ""
+    ]
+  },
+  {
+    "source": "dsi-2026",
+    "page": 42,
+    "row": [
+      "51.550.1015",
+      "Taşıma Mesafesi, Taşıma Yolu Üzerinden Ölçülen Her Cins Kaplamalı Kaplamasız Yolda “M” Metre Mesafeye (10 000 metre ve daha az) Her Cins Yük ve Malzemenin Taşınması (Ton) (1 Ton Her Cins Malzemenin M= ……….m. Mesafeye taşınması F= 0.00017 K. A.B.M √M 1 Ton yükün M metreye taşıma fiyatı k",
+      "Ton",
+      ""
+    ]
+  },
+  {
+    "source": "dsi-2026",
+    "page": 42,
+    "row": [
+      "51.550.1020",
+      "Taşıma Mesafesi, Taşıma Yolu Üzerinden Ölçülen Her Cins Kaplamalı Kaplamasız Yolda “M” Metre Mesafeye (10 km den fazla) Her Cins Yük ve Malzemenin Taşınması (Ton) (1 Ton Her Cins Malzemenin M= ……….km. Mesafeye taşınması F=K(0.0007 x M+0.01).A.B.M 1 Ton yükün M km'ye taşıma fiyatı k",
+      "Ton",
+      ""
+    ]
+  },
+  {
+    "source": "dsi-2026",
+    "page": 42,
+    "row": [
+      "56.800.2000",
+      "Karşılaştırma ve Yeterlilik Deneyleri (TL/Deney adeti) TS EN ISO 17043 (***)",
+      "0",
+      "-"
+    ]
+  },
+  {
+    "source": "dsi-2026",
+    "page": 42,
+    "row": [
+      "56.801.1020",
+      "Fiziksel Model Deneyi - (****)",
+      "adet",
+      "-"
+    ]
+  },
+  {
+    "source": "dsi-2026",
+    "page": 42,
+    "row": [
+      "56.801.1030",
+      "Kıyı Model Deneyi (1 Saatlik Çalışma) - (****)",
+      "adet",
+      "-"
+    ]
+  },
+  {
+    "source": "dsi-2026",
+    "page": 42,
+    "row": [
+      "56.801.1040",
+      "Sayısal Analiz (Matematiksel Modelleme ve Araştırma) (1 Saaatlik Çalışma) - (****)",
+      "adet",
+      "-"
+    ]
+  },
+  {
+    "source": "dsi-2026",
+    "page": 78,
+    "row": [
+      "56.952.1000",
+      "Bitkisel toprağın temini",
+      "m³",
+      "-"
+    ]
+  }
+]

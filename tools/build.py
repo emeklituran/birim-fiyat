@@ -1,0 +1,65 @@
+"""Dependency-free static website build; SITE_URL enables canonical URLs/sitemap."""
+import json
+import os
+import shutil
+from html import escape as e
+from pathlib import Path
+
+ROOT=Path(__file__).resolve().parents[1]
+OUT=ROOT/'dist'
+SITE=os.environ.get('SITE_URL','').rstrip('/')
+records=json.loads((ROOT/'data/records.json').read_text())
+sources=json.loads((ROOT/'data/sources.json').read_text())
+if OUT.exists():
+    shutil.rmtree(OUT)
+OUT.mkdir(exist_ok=True)
+for asset in ['style.css','app.js']:
+    shutil.copy(ROOT/'web'/asset,OUT/asset)
+shutil.copy(ROOT/'data/records.json',OUT/'records.json')
+
+def shell(title, body, path='', base='./', description='Resmî kurumların birim fiyat kitaplarında poz numarası veya açıklamayla arama yapın. Poz tanımı, birimi, fiyatı ve kaynak belgesini inceleyin.'):
+    canonical=f'<link rel="canonical" href="{e(SITE+"/"+path)}">' if SITE else ''
+    return f'''<!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><base href="{base}"><title>{e(title)} | Poz Arama</title><meta name="description" content="{e(description)}"><meta name="theme-color" content="#166c55">{canonical}<link rel="stylesheet" href="style.css"></head><body><header><nav class="wrap" aria-label="Ana menü"><a class="brand" href="./"><span class="mark">P.</span> Poz Arama</a><div class="links"><a href="./">Poz ara</a><a href="kaynaklar/">Veri kaynakları</a></div></nav></header><main class="wrap">{body}</main><footer><div class="wrap">Poz Arama · Bağımsız arama uygulaması · Resmî kurum sitesi değildir.<br>Fiyatın dönemini ve kapsamını kaynak belgeden kontrol edin. Kapsam ve eksikler: <a href="kaynaklar/">Veri kaynakları</a></div></footer><script src="app.js" defer></script></body></html>'''
+
+def write(path,content):
+    dest=OUT/path
+    dest.parent.mkdir(parents=True,exist_ok=True)
+    dest.write_text(content)
+
+institutions=sorted(set(r['institution'] for r in records))
+options=''.join(f'<option value="{e(x)}">{e(x)}</option>' for x in institutions)
+body=f'''<section class="hero"><div class="eyebrow">Kamu birim fiyat kütüphanesi · 2026</div><h1>Aradığınız poz,<br>tek bir yerde.</h1><p>Poz numarasını veya işin adını yazın. Birim fiyatı, kitapta yer alan tanımı ve resmî kaynağı birlikte bulun.</p></section><form id="search" role="search"><div class="searchbox"><label class="sr-only" for="q">Poz numarası veya anahtar kelimeler</label><input id="q" name="q" type="search" placeholder="Poz numarası veya anahtar kelime…" autocomplete="off"><button class="primary" type="submit">Ara →</button></div><div class="filters"><label for="institution">Kurum</label><select id="institution"><option value="">Tüm aktarılan kurumlar</option>{options}</select><span class="muted">Türkçe karakter olmadan da arayabilirsiniz.</span></div></form><aside class="notice">İlk veri aktarımı: KGM ve DSİ 2026 yıllık fiyatları. ÇŞB ve diğer kurumların aktarımı sürüyor. DSİ pozlarının bir bölümünde ayrı R03 yayınından tarif metni de bulunur; diğer ayrıntılı analiz ve tarifler henüz aktarılmadı. Yıllık fiyatlar, aylık güncellemelerden farklıdır. <a href="kaynaklar/">Kapsamı incele →</a></aside><div class="bar"><strong id="count" role="status" aria-live="polite">Pozlar yükleniyor…</strong><span class="muted">Fiyatlar Türk lirası</span></div><section id="results" class="results" aria-label="Arama sonuçları"></section><div class="paging"><button id="prev" disabled>← Önceki</button><span id="page">1 / 1</span><button id="next" disabled>Sonraki →</button></div><noscript><p>Canlı arama için JavaScript gereklidir. <a href="dizin/">Poz dizinini</a> JavaScript olmadan inceleyebilirsiniz.</p></noscript><a class="muted" href="dizin/">Tüm pozlar dizini →</a>'''
+write('index.html',shell('2026 birim fiyat ve poz arama',body))
+paths=['','kaynaklar/','dizin/']
+for r in records:
+    path='poz/'+r['id']+'/'
+    paths.append(path)
+    price=(f"{float(r['price']):,.2f}".translate(str.maketrans(',.','.,'))+" ₺") if r['price'] is not None else "Tarife bağlı"
+    body=f'''<article class="detail"><a class="muted" href="./">← Poz aramaya dön</a><p class="eyebrow">{e(r['institution'])} · {r['year']} · {e(r['code'])}</p><h1>{e(r['title'])}</h1><section class="detail-panel"><dl class="facts"><div><dt>Poz numarası</dt><dd>{e(r['code'])}</dd></div><div><dt>Birim</dt><dd>{e(r['unit'])}</dd></div><div><dt>Fiyat</dt><dd>{price}</dd></div><div><dt>Dönem</dt><dd>{e(r['period'])}</dd></div></dl><p class="muted">{e(r['priceBasis'])}</p><p>{e(r.get('priceText',''))}</p></section><section class="prose"><h2>Kitaptaki tanım</h2><p>{e(r['title'])}</p><aside class="notice">{e(r['descriptionStatus'])}</aside><h2>Resmî kaynak</h2><p><a href="{e(r['sourceUrl'])}" target="_blank" rel="noopener noreferrer">{e(r['institution'])} {r['year']} birim fiyat kitabı · PDF sayfa {r['page']} ↗</a></p><p>Gösterilen fiyat kitabın ilgili sütunundan alınmıştır. KDV, kâr ve diğer uygulama koşulları için resmî belgenin genel hükümlerini inceleyin.</p></section></article>'''
+    if r.get('tariff'):
+        t=r['tariff']
+        section='<section class="prose"><h2>Kaynak tarif metni</h2><p class="muted">'+e(t['version'])+'</p><div style="white-space:pre-wrap">'+e(t['text'])+'</div><p><a href="'+e(t['url'])+'" target="_blank" rel="noopener noreferrer">Tarif PDF · sayfa '+str(t['page'])+' ↗</a></p></section>'
+        body=body.replace('</article>',section+'</article>')
+    write(path+'index.html',shell(r['code']+' '+r['title'][:100],body,path,'../../',r['title'][:155]))
+body='<section class="hero"><div class="eyebrow">Şeffaf veri kapsamı</div><h1>Kaynaklar ve güncellik.</h1><p>Yalnızca aktarılan resmî veriler arama sonuçlarında görünür. Son veri derleme tarihi: 27 Ekim 2026. Bu tarih, fiyatların o tarihte yürürlükteki en son fiyatlar olduğunu ifade etmez.</p></section><div class="source-list">'
+for s in sources:
+    count=sum(r['source']==s['id'] for r in records)
+    body+=f'<article><h2>{e(s["institution"])} · {e(s["period"])}</h2><strong>{str(count)+" poz aktarıldı" if count else "Aktarım bekliyor"}</strong><p class="prose">{e(s["note"])}</p><a href="{e(s["url"])}" target="_blank" rel="noopener noreferrer">Resmî kaynağı aç ↗</a></article>'
+body+='</div><p class="prose">PDF tablo tanımları ile ayrıntılı birim fiyat tarifleri ayrı içeriklerdir. Ayrıntılı tarif aktarılmadığında tablo tanımı, tam tarif olarak etiketlenmez. Aktarım raporu kaynak kodunda data/import-report.json dosyasındadır.</p>'
+write('kaynaklar/index.html',shell('Veri kaynakları ve kapsam',body,'kaynaklar/','../'))
+# Crawlable paginated directory: no client-side-only SEO dependency.
+groups=[records[i:i+200] for i in range(0,len(records),200)]
+for n,group in enumerate(groups):
+    path='dizin/' if n==0 else f'dizin/{n+1}/'
+    if n:paths.append(path)
+    links=''.join(f'<li><a href="poz/{e(r["id"])}/">{e(r["institution"])} · {e(r["code"])}</a></li>' for r in group)
+    pages=' · '.join(f'<a href="dizin/{str(i+1)+"/" if i else ""}">{i+1}</a>' for i in range(len(groups)))
+    write(path+'index.html',shell('Poz dizini · '+str(n+1),f'<section class="hero"><h1>Poz dizini</h1><p>{pages}</p></section><ul class="all-links">{links}</ul>',path,'../' if n==0 else '../../'))
+write('404.html',shell('Sayfa bulunamadı','<section class="hero"><h1>Bu sayfa bulunamadı.</h1><p><a href="./">Poz aramaya dön →</a></p></section>',base=(SITE+'/' if SITE else './')))
+write('.nojekyll','')
+if SITE:
+    write('sitemap.xml','<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'+''.join('<url><loc>'+e(SITE+'/'+p)+'</loc></url>' for p in paths)+'</urlset>')
+    write('robots.txt','User-agent: *\nAllow: /\nSitemap: '+SITE+'/sitemap.xml\n')
+else:
+    write('robots.txt','User-agent: *\nAllow: /\n')
+print(f'Built {len(records)} detail pages. Canonical base: {SITE or "not configured"}')
